@@ -13,7 +13,7 @@ Windows:
 {
     init: function()
     {
-        //dump("Windows.init()\n");
+        //console.log("Windows.init()\n");
         try
         {
             this.lib = ctypes.open("user32.dll");
@@ -28,7 +28,7 @@ Windows:
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
             this.uninit();
             return false;
         }
@@ -36,7 +36,7 @@ Windows:
     
     uninit: function()
     {
-        //dump("Windows.uninit()\n");
+        //console.log("Windows.uninit()\n");
         try
         {
             if (this.lib)
@@ -46,13 +46,13 @@ Windows:
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
         }
     },
 
     focus: function()
     {
-        //dump("Windows.focus()\n");
+        //console.log("Windows.focus()\n");
         try
         {
             if (this.ActivateKeyboardLayout)
@@ -62,13 +62,13 @@ Windows:
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
         }
     },
 
     blur: function()
     {
-        //dump("Windows.blur()\n");
+        //console.log("Windows.blur()\n");
         try
         {
             if (this.ActivateKeyboardLayout && this.hkl)
@@ -78,7 +78,7 @@ Windows:
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
         }
     }
 }, // Windows
@@ -89,7 +89,7 @@ MacOS:
 //    {
 //        init: function()
 //        {
-//            dump("MacOS.CoreFoundation.init()\n");
+//            console.log("MacOS.CoreFoundation.init()\n");
 //            this.lib = ctypes.open("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation");
 
 //            this.CFStringRef = new ctypes.StructType("CFString").ptr;
@@ -106,7 +106,7 @@ MacOS:
 //        
 //        uninit: function()
 //        {
-//            dump("MacOS.CoreFoundation.uninit()\n");
+//            console.log("MacOS.CoreFoundation.uninit()\n");
 //            try
 //            {
 //                if (this.lib)
@@ -116,7 +116,7 @@ MacOS:
 //            }
 //            catch (err)
 //            {
-//                dump(err + "\n");
+//                console.log(err + "\n");
 //            }
 //        },
 
@@ -134,7 +134,7 @@ MacOS:
 //            }
 //            catch (err)
 //            {
-//                dump(err + "\n");
+//                console.log(err + "\n");
 //            }
 //        }
 //    }, // CoreFoundation
@@ -143,7 +143,7 @@ MacOS:
     {
         init: function(CoreFoundation)
         {
-            //dump("MacOS.HIToolbox.init()\n");
+            //console.log("MacOS.HIToolbox.init()\n");
             this.lib = ctypes.open("/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/HIToolbox");
             this.TISInputSourceRef = new ctypes.StructType("TISInputSource").ptr;
             this.TISCopyCurrentASCIICapableKeyboardInputSource = this.lib.declare("TISCopyCurrentASCIICapableKeyboardInputSource",  
@@ -167,7 +167,7 @@ MacOS:
     
         uninit: function()
         {
-            //dump("MacOS.HIToolbox.uninit()\n");
+            //console.log("MacOS.HIToolbox.uninit()\n");
             try
             {
                 if (this.lib)
@@ -177,26 +177,26 @@ MacOS:
             }
             catch (err)
             {
-                //dump(err + "\n");
+                //console.log(err + "\n");
             }
         }
     }, // HIToolbox
 
     init: function()
     {
-        //dump("MacOS.init()\n");
+        //console.log("MacOS.init()\n");
         try
         {
             //this.CoreFoundation.init();
             this.HIToolbox.init(this.CoreFoundation);
             this.asciiSource = this.HIToolbox.TISCopyCurrentASCIICapableKeyboardInputSource();
             //var id = ctypes.cast(this.HIToolbox.TISGetInputSourceProperty(this.englishSource, this.HIToolbox.kTISPropertyInputSourceID), this.CoreFoundation.CFStringRef);
-            //dump("ASCII source: " + this.CoreFoundation.CFStringToJSString(id) + "\n");
+            //console.log("ASCII source: " + this.CoreFoundation.CFStringToJSString(id) + "\n");
             return true;
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
             this.uninit();
             return false;
         }
@@ -204,46 +204,46 @@ MacOS:
     
     uninit: function()
     {
-        //dump("MacOS.uninit()\n");
+        //console.log("MacOS.uninit()\n");
         this.HIToolbox.uninit();
         //this.CoreFoundation.uninit();
     },
 
     focus: function()
     {
-        //dump("MacOS.focus()\n");
+        //console.log("MacOS.focus()\n");
         try
         {
             this.currentSource = this.HIToolbox.TISCopyCurrentKeyboardInputSource();
             //var id = ctypes.cast(this.HIToolbox.TISGetInputSourceProperty(this.currentSource, this.HIToolbox.kTISPropertyInputSourceID), this.CoreFoundation.CFStringRef);
-            //dump("Current source: " + this.CoreFoundation.CFStringToJSString(id) + "\n");
+            //console.log("Current source: " + this.CoreFoundation.CFStringToJSString(id) + "\n");
             if (this.asciiSource)
             {
                 this.HIToolbox.TISSelectInputSource(this.asciiSource);
             }
 //            var ptr = this.HIToolbox.TISGetInputSourceProperty(src, this.HIToolbox.kTISPropertyInputSourceLanguages);
-//            dump("ptr: " + ptr + "\n");
+//            console.log("ptr: " + ptr + "\n");
 //            var arr = ctypes.cast(ptr, this.CoreFoundation.CFArrayRef);
-//            dump("arr: " + arr + "\n");
+//            console.log("arr: " + arr + "\n");
 //            var count = this.CoreFoundation.CFArrayGetCount(arr);
-//            dump("count: " + count + "\n");
+//            console.log("count: " + count + "\n");
 //            for (var i = 0; i < count; i++)
 //            {
 //                var val = this.CoreFoundation.CFArrayGetValueAtIndex(arr, i);
 //                var cfstr = ctypes.cast(val, this.CoreFoundation.CFStringRef);
 //                var jsstr = this.CoreFoundation.CFStringToJSString(cfstr);
-//                dump("arr[" + i + "]: " + jsstr + "\n");
+//                console.log("arr[" + i + "]: " + jsstr + "\n");
 //            }
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
         }
     },
 
     blur: function()
     {
-        //dump("MacOS.blur()\n");
+        //console.log("MacOS.blur()\n");
         try
         {
             if (this.currentSource)
@@ -253,7 +253,7 @@ MacOS:
         }
         catch (err)
         {
-            //dump(err + "\n");
+            //console.log(err + "\n");
         }
     }
 }, // MacOS
@@ -262,8 +262,8 @@ init: function ()
 {
     try
     {
-        //dump("init\n");
-        //dump("platform: " + navigator.platform + "\n");
+        //console.log("init\n");
+        //console.log("platform: " + window.navigator.platform + "\n");
 
         Components.utils.import("resource://gre/modules/ctypes.jsm");
 
@@ -277,12 +277,12 @@ init: function ()
         }
         else
         {
-            //dump("Unsupported platform: " + navigator.platform + "\n");
-            alert("Unsupported platform: " + navigator.platform);
+            //console.log("Unsupported platform: " + window.navigator.platform + "\n");
+            alert("Unsupported platform: " + window.navigator.platform);
             return;
         }
 
-        var urlbar = document.getElementById('urlbar-input');
+        var urlbar = window.document.getElementById('urlbar-input');
         if (urlbar)
         {
             urlbar.addEventListener("focus", function() { UC.inputLanguageAssistant.focus(); }, false);
@@ -291,13 +291,13 @@ init: function ()
     }
     catch (err)
     {
-        //dump(err + "\n");
+        //console.log(err + "\n");
     }
 },
 
 uninit: function ()
 {
-    //dump("uninit\n");
+    //console.log("uninit\n");
     try
     {
         if (this.engine)
@@ -307,13 +307,13 @@ uninit: function ()
     }
     catch (err)
     {
-        //dump(err + "\n");
+        //console.log(err + "\n");
     }
 },
 
 focus: function ()
 {
-    //dump("focus\n");
+    //console.log("focus\n");
     try
     {
         if (this.engine)
@@ -323,13 +323,13 @@ focus: function ()
     }
     catch (err)
     {
-        //dump(err + "\n");
+        //console.log(err + "\n");
     }
 },
 
 blur: function ()
 {
-    //dump("blur\n");
+    //console.log("blur\n");
     try
     {
         if (this.engine)
@@ -339,7 +339,7 @@ blur: function ()
     }
     catch (err)
     {
-        //dump(err + "\n");
+        //console.log(err + "\n");
     }
 }
 
